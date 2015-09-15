@@ -61,7 +61,7 @@ function lookUpGoogleMaps(usrLoc){
             console.log("There was an error");
         }
         // console.log(userLat, userLon, issLat, issLon)
-        console.log("\nThe distance between you and the ISS is: " + Math.round( distanceToISS(userLat, userLon, issLat, issLon) ) + " meters");
+        console.log("\nThe distance between you and the ISS is: " + Math.round( distanceToISS(userLat, userLon, issLat, issLon)/1000 ) + " kilometers\nOr approximately " + Math.round( distanceToISS(userLat, userLon, issLat, issLon)/1000000 ) + " times the width of France.");
     });
 }
 

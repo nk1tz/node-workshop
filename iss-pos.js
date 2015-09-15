@@ -2,35 +2,28 @@
 
 var request = require('request');
 var prompt = require('prompt');
-var userLocation = "";
-var issLat;
-var issLon;
-var userLat;
-var userLon;
 
-// Start the prompt
-getISSLocation();
+// -----------------------------------------------
+// MAIN
+getUserLocationData();
+// end MAIN --------------------------------------
 
-// Get location property from user
-setTimeout(getUserLocationData, 2000);
+
 
  //-------Functions--------\\
 //__________________________\\
 
-function getDistanceBtwUserAndISS(){
-    setTimeout(getUserLocationData, 2000);
-}
-
-function getISSLocation(){
+function getISSLocation(loc){
     request('http://api.open-notify.org/iss-now.json', function(error, response, body) {
         if(!error){
             var issInfo = JSON.parse(body);
-            issLat = issInfo.iss_position.latitude;
-            issLon = issInfo.iss_position.longitude;
+            var issLat = issInfo.iss_position.latitude;
+            var issLon = issInfo.iss_position.longitude;
             console.log("\nThe ISS is now at: \nLatitude: " + Math.round(issInfo.iss_position.latitude * 100)/100 + "\nLongitude: " + Math.round(issInfo.iss_position.longitude * 100)/100)
         }else{
             console.log("There was an error");
         }
+        lookUpGoogleMaps(loc, issLat, issLon);
     });
 }
 
@@ -46,16 +39,16 @@ function getUserLocationData(){
         //
 
         console.log('  --  user location: ' + result.location);
-        lookUpGoogleMaps(result.location)
+        getISSLocation(result.location);
     });
 }
 
-function lookUpGoogleMaps(usrLoc){
+function lookUpGoogleMaps(usrLoc, issLat, issLon){
     request('https://maps.googleapis.com/maps/api/geocode/json?address=' + usrLoc +"", function(error, response, body) {
         if(!error){
             var userLocationInfo = JSON.parse(body);
-            userLat = userLocationInfo.results[0].geometry.location.lat;
-            userLon = userLocationInfo.results[0].geometry.location.lng;
+            var userLat = userLocationInfo.results[0].geometry.location.lat;
+            var userLon = userLocationInfo.results[0].geometry.location.lng;
             // console.log(userLocationInfo.results[0].geometry.location.lat + "\n" + userLocationInfo.results[0].geometry.location.lng);
         }else{
             console.log("There was an error");
